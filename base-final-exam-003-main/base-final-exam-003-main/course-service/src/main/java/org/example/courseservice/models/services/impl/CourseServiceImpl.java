@@ -19,6 +19,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = "courses", key = "#id", sync = true)
     public Course getCourseById(Long id) {
         return courseRepository.findById(id)
                 .orElseThrow(() -> new CourseNotFoundException(id));

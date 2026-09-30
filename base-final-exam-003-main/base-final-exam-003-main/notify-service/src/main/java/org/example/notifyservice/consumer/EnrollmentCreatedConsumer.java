@@ -5,10 +5,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
 @Component
 public class EnrollmentCreatedConsumer {
+
+    private static final Logger log = LoggerFactory.getLogger(EnrollmentCreatedConsumer.class);
 
     private final EmailService emailService;
 
@@ -16,7 +17,9 @@ public class EnrollmentCreatedConsumer {
         this.emailService = emailService;
     }
 
+    @KafkaListener(topics = "${notification.kafka.enrollment-created-topic}")
     public void consume(String email) {
-        throw new UnsupportedOperationException();
+        log.info("Received enrollment created event for email: {}", email);
+        emailService.sendEnrollmentCreatedEmail(email);
     }
 }
